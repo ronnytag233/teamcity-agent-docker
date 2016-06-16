@@ -12,6 +12,5 @@ if [ ! -d "$AGENT_DIR/bin" ]; then
 fi
 
 echo "Starting buildagent..."
-chown -R teamcity:teamcity /opt/buildAgent
 
-exec /sbin/setuser teamcity /opt/buildAgent/bin/agent.sh run
+exec /opt/buildAgent/bin/agent.sh run

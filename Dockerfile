@@ -9,9 +9,9 @@ ENV DOCKER_SHA256 893e3c6e89c0cd2c5f1e51ea41bc2dd97f5e791fcfa3cee28445df27783633
 ENV RANCHER_COMPOSE v0.7.4
 ENV DOCKER_COMPOSE 1.7.1
 
-ENV PACKAGES python-pip lxc aufs-tools ca-certificates software-properties-common unzip
+ENV PACKAGES python-pip lxc aufs-tools ca-certificates software-properties-common unzip git
 ENV TERM xterm-256color
-ENV AGENT_DIR  /opt/buildAgent
+ENV AGENT_DIR /opt/buildAgent
 
 # Install java-8-oracle and key packages
 RUN apt-get update  && \
@@ -20,7 +20,7 @@ RUN apt-get update  && \
 	  add-apt-repository -y ppa:webupd8team/java && \
 		echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections && \
 	  apt-get update && \
-	  apt-get install -y oracle-java8-installer && \
+	  apt-get install -y oracle-java8-installer ca-certificates-java && \
 	  rm -rf /var/lib/apt/lists/* /var/cache/oracle-jdk8-installer/*.tar.gz /usr/lib/jvm/java-8-oracle/src.zip /usr/lib/jvm/java-8-oracle/javafx-src.zip \
 	 		/usr/lib/jvm/java-8-oracle/jre/lib/security/cacerts && \
 	  ln -s /etc/ssl/certs/java/cacerts /usr/lib/jvm/java-8-oracle/jre/lib/security/cacerts && \
@@ -34,13 +34,11 @@ RUN apt-get update  && \
   	rmdir docker && \
   	rm docker.tgz && \
   	docker -v && \
-		groupadd docker && adduser --disabled-password --gecos "" teamcity && \
-	 	usermod -a -G docker teamcity && \
 		curl -o /usr/local/bin/docker-compose -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE/docker-compose-Linux-x86_64 && \
 		wget -qO- https://github.com/rancher/rancher-compose/releases/download/$RANCHER_COMPOSE/rancher-compose-linux-amd64-$RANCHER_COMPOSE.tar.gz | tar xz -C /usr/local/bin/ && \
 		chmod +x -R /usr/local/bin && \
     mkdir -p $AGENT_DIR && \
-    chown -R teamcity $AGENT_DIR && \
  		pip install --upgrade awscli
 
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 COPY agent-start.sh /etc/my_init.d/50-agent-start.sh

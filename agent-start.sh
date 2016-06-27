@@ -11,6 +11,12 @@ if [ ! -d "$AGENT_DIR/bin" ]; then
     printf '\n%s\n%s\n' "serverUrl=${TEAMCITY_SERVER}" "name=${HOSTNAME}" > $AGENT_DIR/conf/buildAgent.properties
 fi
 
+# Add heroku creds if provided
+if ! [[ -z $HEROKU_EMAIL && -z $HEROKU_API_KEY ]]; then
+  echo "machine api.heroku.com login $HEROKU_EMAIL password $HEROKU_API_KEY" >> /root/.netrc
+  echo "machine git.heroku.com login $HEROKU_EMAIL password $HEROKU_API_KEY" >> /root/.netrc
+fi
+
 echo "Starting buildagent..."
 
 exec /opt/buildAgent/bin/agent.sh run

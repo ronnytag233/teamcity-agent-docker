@@ -35,7 +35,9 @@ RUN apt-get update  && \
   	rm docker.tgz && \
   	docker -v && \
 		curl -o /usr/local/bin/docker-compose -SL https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE/docker-compose-Linux-x86_64 && \
-		wget -qO- https://github.com/rancher/rancher-compose/releases/download/$RANCHER_COMPOSE/rancher-compose-linux-amd64-$RANCHER_COMPOSE.tar.gz | tar xz -C /usr/local/bin/ && \
+		wget -qO- https://github.com/rancher/rancher-compose/releases/download/$RANCHER_COMPOSE/rancher-compose-linux-amd64-$RANCHER_COMPOSE.tar.gz | tar xz -C /tmp && \
+		mv /tmp/rancher-compose-$RANCHER_COMPOSE/rancher-compose /usr/local/bin/ && \
+		wget -qO- https://toolbelt.heroku.com/install-ubuntu.sh | sh && \
 		chmod +x -R /usr/local/bin && \
     mkdir -p $AGENT_DIR && \
  		pip install --upgrade awscli

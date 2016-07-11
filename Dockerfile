@@ -6,15 +6,17 @@ MAINTAINER StepsAway <devgru@stepsaway.com>
 ENV DOCKER_BUCKET get.docker.com
 ENV DOCKER_VERSION 1.11.1
 ENV DOCKER_SHA256 893e3c6e89c0cd2c5f1e51ea41bc2dd97f5e791fcfa3cee28445df277836339d
-ENV RANCHER_COMPOSE v0.7.4
+ENV RANCHER_COMPOSE v0.8.5
 ENV DOCKER_COMPOSE 1.7.1
 
-ENV PACKAGES python-pip lxc aufs-tools ca-certificates software-properties-common unzip git
+ENV PACKAGES python-pip lxc aufs-tools ca-certificates software-properties-common unzip git ssh heroku-toolbelt
 ENV TERM xterm-256color
 ENV AGENT_DIR /opt/buildAgent
 
 # Install java-8-oracle and key packages
-RUN apt-get update  && \
+RUN echo "deb http://toolbelt.heroku.com/ubuntu ./" > /etc/apt/sources.list.d/heroku.list && \
+		curl -s https://toolbelt.heroku.com/apt/release.key | apt-key add - && \
+		apt-get update  && \
 	  apt-get install -y --no-install-recommends $PACKAGES && \
 	  rm -rf /var/lib/apt/lists/* && \
 	  add-apt-repository -y ppa:webupd8team/java && \
